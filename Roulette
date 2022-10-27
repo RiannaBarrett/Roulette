@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <time.h>
+#include<stdlib.h>
+
+double get_bet_Amount(double curr){
+double bet;
+printf("\nEnter your bet: $");
+scanf("%lf",&bet);
+while (bet<=0||bet>curr){
+printf("Invalid bet, Enter again: $\n");
+printf("Enter your bet: $");
+scanf("%lf",&bet);
+}
+return bet;
+}
+
+int get_bet_type(){
+int type;
+printf("\nHow do you wish to bet?\n");
+printf("Press 1 To bet on Odd\n");
+printf("Press 2 To bet on Even\n");
+printf("Press 3 To bet on a particular Number\n");
+scanf("%d", &type);
+while(type>3 || type<1){
+printf("Invalid bet type, Enter again\n");
+scanf("%d", &type);
+}
+
+return type;
+
+}
+
+int get_number(){
+int number;
+printf("\nEnter the number you would to bet on:");
+scanf("%d", &number);
+while (number>36|| number<1){
+printf("Invalid number, Enter again\n");
+scanf("%d", &number);
+}
+return number;
+}
+int spin_wheel(){
+return rand()%38;
+}
+double evaluate_odd(int spin, double bet){
+printf("\nThe ball landed on %d.\n", spin );
+if (spin%2){
+printf("That is odd, you win $%.2f\n", (bet+bet));
+return (bet+bet);
+}
+else{
+printf("Sorry, you lose $%.2f\n", (bet));
+return -bet;
+}
+}
+
+double evaluate_even(int spin, double bet){
+printf("\nThe ball landed on %d.\n", spin );
+if (spin%2==0){
+printf("That is even, you win $%.2f\n", bet+bet);
+return (bet+bet);
+}
+else{
+printf("Sorry, you lose $%.2f\n", bet);
+return -bet;
+}
+}
+
+double evaluate_number(int number, int spin, double bet){
+printf("\nThe ball landed on %d.\n", spin);
+if(spin==number){
+printf("That's your number, you win $%.2f\n",bet*35);
+return(bet*35);
+}
+
+else{
+printf("Sorry, you lose $%.2f\n", bet);
+return -bet;
+}
+}
+
+void print_winning(double win, double bal){
+printf("Your total winning are $%.2f\n", win);
+printf("Your current account is $%.2f\n", bal);
+return;
+}
+
+int main(){
+srand(time(0));
+double mybalance, win, total=0;
+int bet, type, spin, okay=1, number;
+
+printf("ROULETTE GAME\nYou can play it, but can you win it?\n\n");
+printf("Enter the amount of money you would like to start with: $");
+
+scanf("%lf", &mybalance);
+while (mybalance<=0){
+printf("\nThis amount is invalid, enter again");
+scanf("%lf", &mybalance);
+}
+while(okay){
+bet= get_bet_Amount(mybalance);
+type=get_bet_type ();
+spin=spin_wheel();
+if(spin==0|| spin==37){
+printf("\nThe ball landed on a green slot\n");
+printf("Sorry, you lose $%d\n", bet);
+}
+
+else if(type==1){
+win=evaluate_odd(spin, bet);
+mybalance+=win;
+total+=win;
+}
+
+else if(type==2){
+win=evaluate_even(spin, bet);
+mybalance+=win;
+total+=win;
+}
+
+else{
+number=get_number();
+win=evaluate_number(number, spin, bet);
+mybalance+=win;
+total+=win;
+}
+
+print_winning(total,mybalance);
+if(mybalance<=0){
+printf("You do not have sufficent funds\nTHANK YOU FOR PLAYING
+ROULETTE\n");
+return 0;
+}
+printf("\nEnter 0 to Quit, 1 to continue:");
+scanf("%d", &okay);
+}
+return 0;
